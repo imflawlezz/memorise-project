@@ -50,9 +50,9 @@ ehthumbs.db
 *.swo
 *~
 
-# Capacitor / Native platforms (temporary - remove when ready to commit native code)
-/ios
-/android
+# Capacitor / Native platforms
+# /ios
+# /android
 
 # Temporary files
 *.tmp
