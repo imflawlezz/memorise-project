@@ -1,3 +1,28 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# LaTeX generated files
+*.aux
+*.log
+*.pdf
+*.out
+*.toc
+*.synctex.gz
+
+# Keep specific LaTeX source files ignored (build artifacts)
 titlepage.tex
 header_pl.tex
 memorise_specification_v1.1.pdf
