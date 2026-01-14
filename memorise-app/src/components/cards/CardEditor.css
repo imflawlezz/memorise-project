@@ -1,0 +1,138 @@
+/* CardEditor - Unified Design */
+
+.card-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: var(--space-md);
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ion-text-color);
+  background: var(--ion-color-light);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  resize: none;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--ion-color-primary);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* Tag input */
+.tag-input-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.tag-input-row input {
+  flex: 1;
+}
+
+.btn-add-tag {
+  padding: var(--space-sm) var(--space-md);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ion-color-primary);
+  background: none;
+  border: 1px solid var(--ion-color-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.btn-add-tag:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Tags */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 13px;
+  color: var(--ion-color-primary);
+  background: rgba(99, 102, 241, 0.1);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.tag ion-icon {
+  font-size: 14px;
+}
+
+.tag:active {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+/* Actions */
+.editor-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.editor-actions .btn {
+  flex: 1;
+  padding: var(--space-md);
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+.editor-actions .btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.editor-actions .btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.editor-actions .btn-primary {
+  background: var(--ion-color-primary);
+  color: white;
+}
+
+.editor-actions .btn-secondary {
+  background: var(--ion-color-light);
+  color: var(--ion-text-color);
+}

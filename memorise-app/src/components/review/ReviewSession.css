@@ -1,0 +1,255 @@
+/* Review Session - Unified Design */
+
+.session {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Header */
+.session-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  flex-shrink: 0;
+}
+
+.session-progress-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.session-count {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ion-text-color);
+}
+
+.session-time {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.session-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-full);
+}
+
+.session-close:active {
+  background: var(--surface-hover);
+}
+
+.session-close ion-icon {
+  font-size: 24px;
+}
+
+/* Progress bar */
+.session-progress-bar {
+  height: 3px;
+  background: var(--border-color);
+  flex-shrink: 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--ion-color-primary);
+  transition: width 0.3s ease;
+}
+
+/* Card area */
+.session-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  min-height: 0;
+}
+
+.session-card.transitioning {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Controls */
+.session-controls {
+  padding: var(--space-md);
+  padding-bottom: var(--space-lg);
+  flex-shrink: 0;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md) var(--space-lg);
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--ion-color-primary);
+  color: white;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-large {
+  padding: var(--space-lg);
+  font-size: 16px;
+}
+
+/* Complete screen */
+.session-complete,
+.session-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: var(--space-xl) var(--space-md);
+  text-align: center;
+}
+
+.complete-emoji {
+  font-size: 56px;
+  margin-bottom: var(--space-md);
+}
+
+.session-complete h1,
+.session-empty h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  margin: 0 0 var(--space-sm);
+}
+
+.complete-subtitle,
+.session-empty p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-xl);
+}
+
+/* Stats */
+.complete-stats {
+  display: flex;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-lg);
+}
+
+.complete-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.complete-stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+}
+
+.complete-stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+/* Breakdown */
+.complete-breakdown {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.breakdown-item {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.breakdown-item span {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.breakdown-item.again span {
+  color: var(--difficulty-again);
+}
+
+.breakdown-item.hard span {
+  color: var(--difficulty-hard);
+}
+
+.breakdown-item.good span {
+  color: var(--difficulty-good);
+}
+
+.breakdown-item.easy span {
+  color: var(--difficulty-easy);
+}
+
+/* Actions */
+.complete-actions {
+  width: 100%;
+  max-width: 280px;
+}
+
+/* Review not found */
+.review-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+}
+
+.review-not-found p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .session-card {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .session-controls {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}

@@ -1,0 +1,87 @@
+/* Difficulty Buttons - Theme Aware */
+
+.difficulty-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-sm);
+  width: 100%;
+  padding: 0 var(--space-md);
+}
+
+.diff-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--space-md) var(--space-sm);
+  min-height: 64px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.diff-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.diff-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.diff-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+
+.diff-interval {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Button Colors */
+.diff-again {
+  background: var(--difficulty-again);
+}
+
+.diff-hard {
+  background: var(--difficulty-hard);
+}
+
+.diff-hard .diff-label,
+.diff-hard .diff-interval {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.diff-good {
+  background: var(--difficulty-good);
+}
+
+.diff-easy {
+  background: var(--difficulty-easy);
+}
+
+/* Responsive - smaller screens */
+@media (max-width: 360px) {
+  .difficulty-buttons {
+    gap: 6px;
+    padding: 0 var(--space-sm);
+  }
+
+  .diff-btn {
+    padding: var(--space-sm) var(--space-xs);
+    min-height: 56px;
+  }
+
+  .diff-label {
+    font-size: 13px;
+  }
+
+  .diff-interval {
+    font-size: 11px;
+  }
+}

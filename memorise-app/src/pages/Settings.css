@@ -1,0 +1,177 @@
+/* Settings Page - Consistent with Home/Statistics */
+
+.settings-page {
+    min-height: 100%;
+    padding: var(--space-md);
+    padding-bottom: calc(var(--space-xl) + env(safe-area-inset-bottom));
+}
+
+.page-header {
+    padding: var(--space-lg) 0 var(--space-md);
+}
+
+.page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ion-text-color);
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+/* Settings Section */
+.settings-section {
+    margin-bottom: var(--space-lg);
+}
+
+.settings-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin: 0 0 var(--space-sm);
+}
+
+.settings-group {
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.settings-group.danger {
+    border-color: var(--ion-color-danger);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Setting Row (for toggles) */
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.setting-row:last-child {
+    border-bottom: none;
+}
+
+.setting-label {
+    font-size: 15px;
+    color: var(--ion-text-color);
+}
+
+/* Theme Selector */
+.theme-selector {
+    display: flex;
+    background: var(--ion-color-light);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+}
+
+.theme-option {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.theme-option.active {
+    background: var(--ion-color-primary);
+    color: white;
+}
+
+/* Toggle */
+.toggle {
+    position: relative;
+    width: 48px;
+    height: 28px;
+    background: var(--ion-color-light);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform var(--transition-fast);
+}
+
+.toggle.on {
+    background: var(--ion-color-primary);
+}
+
+.toggle.on::after {
+    transform: translateX(20px);
+}
+
+/* Setting Action (for buttons) */
+.setting-action {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    width: 100%;
+    padding: var(--space-md);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border-subtle);
+    cursor: pointer;
+    text-align: left;
+    transition: background var(--transition-fast);
+}
+
+.setting-action:last-child {
+    border-bottom: none;
+}
+
+.setting-action:active {
+    background: var(--surface-hover);
+}
+
+.setting-action ion-icon {
+    font-size: 20px;
+    color: var(--ion-color-primary);
+}
+
+.setting-action.danger ion-icon {
+    color: var(--ion-color-danger);
+}
+
+.setting-action span {
+    flex: 1;
+    font-size: 15px;
+    color: var(--ion-text-color);
+}
+
+.setting-action.danger span {
+    color: var(--ion-color-danger);
+}
+
+.action-arrow {
+    font-size: 18px;
+    color: var(--text-tertiary) !important;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    .settings-page {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: var(--space-lg);
+    }
+}

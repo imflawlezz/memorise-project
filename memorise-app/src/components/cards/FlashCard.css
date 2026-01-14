@@ -1,0 +1,112 @@
+/* FlashCard - Clean 3D Flip */
+
+.card-container {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  max-height: 60vh;
+  aspect-ratio: 3 / 4;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
+}
+
+.card-container.flipped .card {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  background: var(--surface-color);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow-y: auto;
+}
+
+.card-front {
+  z-index: 2;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  z-index: 1;
+}
+
+.card-image {
+  max-width: 100%;
+  max-height: 40%;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+  object-fit: contain;
+}
+
+.card-text {
+  font-size: 18px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ion-text-color);
+  word-break: break-word;
+}
+
+.card-text p {
+  margin: 0;
+}
+
+.card-hint {
+  position: absolute;
+  bottom: var(--space-md);
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.card-side-label {
+  position: absolute;
+  top: var(--space-md);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-tertiary);
+}
+
+/* Touch feedback */
+.card-container:active .card-face {
+  background: var(--surface-hover);
+}
+
+/* Mobile - smaller cards */
+@media (max-width: 400px) {
+  .card-container {
+    max-width: 320px;
+    max-height: 50vh;
+  }
+
+  .card-text {
+    font-size: 16px;
+  }
+}
+
+/* Desktop - allow slightly larger */
+@media (min-width: 768px) {
+  .card-container {
+    max-width: 450px;
+    max-height: 500px;
+  }
+}

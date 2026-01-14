@@ -1,0 +1,97 @@
+/* Modal - Unified Design */
+
+ion-modal.custom-modal {
+    --border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    --background: var(--surface-color);
+}
+
+.modal-container {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+}
+
+.modal-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ion-text-color);
+    margin: 0;
+    flex: 1;
+    text-align: center;
+}
+
+.modal-close,
+.modal-save {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    padding: var(--space-sm);
+    background: none;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.modal-close {
+    color: var(--text-secondary);
+}
+
+.modal-close ion-icon {
+    font-size: 24px;
+}
+
+.modal-save {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ion-color-primary);
+}
+
+.modal-save:active,
+.modal-close:active {
+    opacity: 0.6;
+}
+
+.modal-body {
+    flex: 1;
+    padding: var(--space-md);
+    overflow-y: auto;
+}
+
+/* Form styles inside modal */
+.modal-body ion-item {
+    --background: var(--surface-color);
+    --border-color: var(--border-subtle);
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    margin-bottom: var(--space-md);
+}
+
+.modal-body ion-label {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary) !important;
+    margin-bottom: var(--space-xs) !important;
+}
+
+.modal-body ion-input,
+.modal-body ion-textarea {
+    --padding-start: var(--space-md);
+    --padding-end: var(--space-md);
+    --padding-top: var(--space-sm);
+    --padding-bottom: var(--space-sm);
+    --background: var(--ion-color-light);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-xs);
+}

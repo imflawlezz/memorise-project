@@ -1,0 +1,148 @@
+/* Decks Page - Consistent with Home/Statistics */
+
+.decks-page {
+    min-height: 100%;
+    padding: var(--space-md);
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+}
+
+.page-header {
+    padding: var(--space-lg) 0 var(--space-md);
+}
+
+.page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ion-text-color);
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+/* Empty state */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-2xl) var(--space-md);
+    min-height: 50vh;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: var(--space-md);
+}
+
+.empty-state h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ion-text-color);
+    margin: 0 0 var(--space-sm);
+}
+
+.empty-state p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 0 0 var(--space-lg);
+    max-width: 260px;
+    line-height: 1.5;
+}
+
+/* Deck list */
+.deck-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.deck-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    width: 100%;
+    padding: var(--space-md);
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-align: left;
+    transition: background var(--transition-fast);
+}
+
+.deck-card:active {
+    background: var(--surface-hover);
+}
+
+.deck-color {
+    width: 4px;
+    height: 36px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.deck-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.deck-name {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ion-text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.deck-meta {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.deck-due {
+    color: var(--ion-color-primary);
+    font-weight: 500;
+}
+
+.deck-arrow {
+    font-size: 18px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md) var(--space-lg);
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: transform var(--transition-fast), opacity var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background: var(--ion-color-primary);
+    color: white;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    .decks-page {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: var(--space-lg);
+    }
+}
