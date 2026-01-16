@@ -8,17 +8,25 @@ const Review: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const { getDeck } = useDeckContext();
-  const deck = getDeck(id || '');
+
+  // Support "all" as a special ID for reviewing all due cards
+  const isAllDecks = id === 'all';
+  const deck = isAllDecks ? null : getDeck(id || '');
 
   const handleComplete = useCallback(() => {
     history.push('/home');
   }, [history]);
 
   const handleExit = useCallback(() => {
-    history.push(`/deck/${id}`);
-  }, [history, id]);
+    if (isAllDecks) {
+      history.push('/home');
+    } else {
+      history.push(`/deck/${id}`);
+    }
+  }, [history, id, isAllDecks]);
 
-  if (!deck || !id) {
+  // Validate - either "all" or a valid deck
+  if (!isAllDecks && (!deck || !id)) {
     return (
       <IonPage>
         <IonContent>

@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Card } from '../models/Card';
 import { ReviewMode } from '../models/ReviewLog';
-import { ReviewResult, createActiveSession } from '../models/StudySession';
+import { ReviewResult } from '../models/StudySession';
 import { useDeckContext } from '../contexts/DeckContext';
 import { DifficultyRating, getQualityFromDifficulty } from '../utils/sm2Algorithm';
 
@@ -16,7 +16,6 @@ interface UseReviewSessionReturn {
   sessionTime: number;
   isComplete: boolean;
   totalCards: number;
-  /** Results breakdown by difficulty */
   results: {
     again: number;
     hard: number;
@@ -27,13 +26,13 @@ interface UseReviewSessionReturn {
 
 /**
  * Hook for managing a review session
- * Handles queue, card flipping, review submission, and session statistics
+ * Supports single deck review or "all" for all due cards across all decks
  */
 export const useReviewSession = (
   deckId: string,
   reviewMode: ReviewMode
 ): UseReviewSessionReturn => {
-  const { reviewCard, buildReviewQueue, getDeck } = useDeckContext();
+  const { reviewCard, buildReviewQueue, getDeck, getDueCards } = useDeckContext();
 
   const [queue, setQueue] = useState<Card[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -48,7 +47,7 @@ export const useReviewSession = (
   const lastDeckId = useRef<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Timer effect - updates every second
+  // Timer effect
   useEffect(() => {
     timerRef.current = setInterval(() => {
       setSessionTime(Math.floor((Date.now() - sessionStartTime.current) / 1000));
@@ -67,26 +66,34 @@ export const useReviewSession = (
       return;
     }
 
-    const deck = getDeck(deckId);
-    if (deck) {
-      lastDeckId.current = deckId;
-      const reviewQueue = buildReviewQueue(
-        deckId,
-        deck.settings.newCardsPerDay,
-        deck.settings.reviewsPerDay
-      );
+    let reviewQueue: Card[] = [];
 
-      setQueue(reviewQueue);
-      setCurrentIndex(0);
-      setIsFlipped(false);
-      setIsTransitioning(false);
-      setSessionTime(0);
-      setReviewed([]);
-      setResults({ again: 0, hard: 0, good: 0, easy: 0 });
-      sessionStartTime.current = Date.now();
-      cardStartTime.current = Date.now();
+    if (deckId === 'all') {
+      // Get all due cards from all decks
+      reviewQueue = getDueCards ? getDueCards() : [];
+    } else {
+      // Get cards from specific deck
+      const deck = getDeck(deckId);
+      if (deck) {
+        reviewQueue = buildReviewQueue(
+          deckId,
+          deck.settings.newCardsPerDay,
+          deck.settings.reviewsPerDay
+        );
+      }
     }
-  }, [deckId, getDeck, buildReviewQueue]);
+
+    lastDeckId.current = deckId;
+    setQueue(reviewQueue);
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    setIsTransitioning(false);
+    setSessionTime(0);
+    setReviewed([]);
+    setResults({ again: 0, hard: 0, good: 0, easy: 0 });
+    sessionStartTime.current = Date.now();
+    cardStartTime.current = Date.now();
+  }, [deckId, getDeck, buildReviewQueue, getDueCards]);
 
   const currentCard = queue[currentIndex];
 

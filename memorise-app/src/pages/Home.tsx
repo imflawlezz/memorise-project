@@ -27,8 +27,8 @@ const Home: React.FC = () => {
   const dueCount = dueCards.length;
 
   const handleStartReview = () => {
-    if (dueCards.length > 0 && dueCards[0]?.deckId) {
-      history.push(`/review/${dueCards[0].deckId}`);
+    if (dueCount > 0) {
+      history.push('/review/all');
     }
   };
 
