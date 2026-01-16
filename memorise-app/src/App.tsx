@@ -28,7 +28,8 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-import '@ionic/react/css/palettes/dark.system.css';
+/* Note: We removed @ionic/react/css/palettes/dark.system.css 
+   to prevent automatic dark mode - we control theme manually via ThemeContext */
 
 /* Theme variables */
 import './theme/variables.css';
@@ -37,7 +38,7 @@ setupIonicReact();
 
 const App: React.FC = () => {
   console.log('App component rendering');
-  
+
   return (
     <IonApp>
       <ThemeProvider>
