@@ -4,6 +4,7 @@ import { add, chevronForwardOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import { useDeckContext } from '../contexts/DeckContext';
 import { Modal } from '../components/common/Modal';
+import { ColorPicker } from '../components/common/ColorPicker';
 import { Deck, createDefaultDeck } from '../models/Deck';
 import './Decks.css';
 
@@ -106,6 +107,10 @@ const Decks: React.FC = () => {
               rows={3}
             />
           </IonItem>
+          <ColorPicker
+            value={newDeck.color}
+            onChange={(color) => setNewDeck({ ...newDeck, color })}
+          />
         </Modal>
       </IonContent>
     </IonPage>

@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useDeckContext } from '../contexts/DeckContext';
 import { Modal } from '../components/common/Modal';
 import { CardEditor } from '../components/cards/CardEditor';
+import { ColorPicker } from '../components/common/ColorPicker';
 import { Card } from '../models/Card';
 import './DeckDetail.css';
 
@@ -23,6 +24,7 @@ const DeckDetail: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [deckName, setDeckName] = useState('');
   const [deckDescription, setDeckDescription] = useState('');
+  const [deckColor, setDeckColor] = useState('#6366f1');
 
   if (!deck) {
     return (
@@ -63,12 +65,17 @@ const DeckDetail: React.FC = () => {
   const openEditDeckModal = () => {
     setDeckName(deck.name);
     setDeckDescription(deck.description);
+    setDeckColor(deck.color);
     setShowEditDeckModal(true);
   };
 
   const handleEditDeck = async () => {
     if (!deckName.trim()) return;
-    await updateDeck(id, { name: deckName.trim(), description: deckDescription.trim() });
+    await updateDeck(id, {
+      name: deckName.trim(),
+      description: deckDescription.trim(),
+      color: deckColor
+    });
     setShowEditDeckModal(false);
   };
 
@@ -197,6 +204,7 @@ const DeckDetail: React.FC = () => {
             <IonLabel position="stacked">Description</IonLabel>
             <IonTextarea value={deckDescription} onIonInput={(e) => setDeckDescription(e.detail.value || '')} placeholder="Description" rows={3} />
           </IonItem>
+          <ColorPicker value={deckColor} onChange={setDeckColor} />
           <div className="danger-section">
             <button className="btn btn-danger" onClick={() => setShowDeleteDeckAlert(true)}>
               <IonIcon icon={trashOutline} /> Delete Deck

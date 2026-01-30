@@ -353,37 +353,83 @@ export const DeckProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [cards]);
 
   const getDueCards = useCallback((deckId?: string) => {
-    const filteredCards = deckId ? cards.filter(c => c.deckId === deckId) : cards;
+    // Get cards already reviewed today - exclude them from queue
+    const today = new Date().toDateString();
+    const reviewedTodayIds = new Set(
+      reviewLogs
+        .filter(log => new Date(log.reviewDate).toDateString() === today)
+        .map(log => log.cardId)
+    );
+
+    const filteredCards = (deckId ? cards.filter(c => c.deckId === deckId) : cards)
+      .filter(c => !reviewedTodayIds.has(c.id));
 
     if (deckId) {
       const deck = decks.find(d => d.id === deckId);
       const maxNew = deck?.settings.newCardsPerDay ?? 20;
-      return SpacedRepetitionService.buildReviewQueue(filteredCards, maxNew, 100, 'random');
+
+      // Count new cards already seen today for this deck
+      const newSeenTodayCount = reviewLogs.filter(log => {
+        if (new Date(log.reviewDate).toDateString() !== today) return false;
+        const card = cards.find(c => c.id === log.cardId);
+        return card && card.deckId === deckId && log.previousInterval === 0;
+      }).length;
+
+      const remainingNewCards = Math.max(0, maxNew - newSeenTodayCount);
+      return SpacedRepetitionService.buildReviewQueue(filteredCards, remainingNewCards, 100, 'random');
     }
 
     // For all decks, aggregate with limits per deck
     const allDueCards: Card[] = [];
     for (const deck of decks) {
       const deckCards = filteredCards.filter(c => c.deckId === deck.id);
-      const maxNew = deck.settings.newCardsPerDay;
-      const queue = SpacedRepetitionService.buildReviewQueue(deckCards, maxNew, 100, 'random');
+
+      // Count new cards already seen today for this deck
+      const newSeenTodayCount = reviewLogs.filter(log => {
+        if (new Date(log.reviewDate).toDateString() !== today) return false;
+        const card = cards.find(c => c.id === log.cardId);
+        return card && card.deckId === deck.id && log.previousInterval === 0;
+      }).length;
+
+      const remainingNewCards = Math.max(0, deck.settings.newCardsPerDay - newSeenTodayCount);
+      const queue = SpacedRepetitionService.buildReviewQueue(deckCards, remainingNewCards, 100, 'random');
       allDueCards.push(...queue);
     }
     return allDueCards;
-  }, [cards, decks]);
+  }, [cards, decks, reviewLogs]);
 
   const buildReviewQueue = useCallback((deckId: string, maxNew = 20, maxReview = 100) => {
     const deck = decks.find(d => d.id === deckId);
     if (!deck) return [];
 
-    const deckCards = cards.filter(c => c.deckId === deckId);
+    // Get cards already reviewed today - exclude them from queue  
+    const today = new Date().toDateString();
+    const reviewedTodayIds = new Set(
+      reviewLogs
+        .filter(log => new Date(log.reviewDate).toDateString() === today)
+        .map(log => log.cardId)
+    );
+
+    // Count new cards already seen today for this deck
+    const newSeenTodayCount = reviewLogs.filter(log => {
+      if (new Date(log.reviewDate).toDateString() !== today) return false;
+      const card = cards.find(c => c.id === log.cardId);
+      return card && card.deckId === deckId && log.previousInterval === 0;
+    }).length;
+
+    const remainingNewCards = Math.max(0, maxNew - newSeenTodayCount);
+
+    const deckCards = cards
+      .filter(c => c.deckId === deckId)
+      .filter(c => !reviewedTodayIds.has(c.id));
+
     return SpacedRepetitionService.buildReviewQueue(
       deckCards,
-      maxNew,
+      remainingNewCards,
       maxReview,
       deck.settings.cardOrder
     );
-  }, [decks, cards]);
+  }, [decks, cards, reviewLogs]);
 
   const getTodayStats = useCallback(() => {
     const today = new Date().toDateString();

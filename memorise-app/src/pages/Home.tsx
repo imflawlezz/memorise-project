@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   IonContent,
   IonPage,
@@ -8,12 +8,21 @@ import {
 import { useHistory } from 'react-router-dom';
 import { chevronForwardOutline } from 'ionicons/icons';
 import { useDeckContext } from '../contexts/DeckContext';
+import { StorageService, getDefaultSettings } from '../services/storageService';
 import { formatDuration } from '../utils/dateHelpers';
 import './Home.css';
 
 const Home: React.FC = () => {
   const history = useHistory();
   const { decks = [], getDueCards, getTodayStats, loading } = useDeckContext();
+  const [dailyLimit, setDailyLimit] = useState(getDefaultSettings().dailyReviewLimit + getDefaultSettings().dailyNewCardLimit);
+
+  // Load settings to get daily limits
+  useEffect(() => {
+    StorageService.getSettings().then(settings => {
+      setDailyLimit(settings.dailyNewCardLimit + settings.dailyReviewLimit);
+    });
+  }, []);
 
   const dueCards = useMemo(() => {
     try {
@@ -24,10 +33,13 @@ const Home: React.FC = () => {
   }, [getDueCards]);
 
   const stats = useMemo(() => getTodayStats(), [getTodayStats]);
-  const dueCount = dueCards.length;
+
+  // Show the effective count (limited by daily settings)
+  const totalDue = dueCards.length;
+  const effectiveDueCount = Math.min(totalDue, dailyLimit);
 
   const handleStartReview = () => {
-    if (dueCount > 0) {
+    if (effectiveDueCount > 0) {
       history.push('/review/all');
     }
   };
@@ -89,13 +101,13 @@ const Home: React.FC = () => {
               </div>
 
               {/* Review CTA */}
-              {dueCount > 0 && (
+              {effectiveDueCount > 0 && (
                 <button
                   className="review-cta"
                   onClick={handleStartReview}
                 >
                   <div className="review-cta-content">
-                    <span className="review-cta-count">{dueCount}</span>
+                    <span className="review-cta-count">{effectiveDueCount}</span>
                     <span className="review-cta-text">cards to review</span>
                   </div>
                   <IonIcon icon={chevronForwardOutline} />

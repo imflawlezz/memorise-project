@@ -1,27 +1,39 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { IonPage, IonContent } from '@ionic/react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { useDeckContext } from '../contexts/DeckContext';
 import { ReviewSession } from '../components/review/ReviewSession';
 
 const Review: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
+  const location = useLocation();
   const { getDeck } = useDeckContext();
+
+  // Use a unique session key to force remount when the route is revisited
+  // This ensures a fresh session each time
+  const [sessionKey, setSessionKey] = useState(() => Date.now());
+
+  // Update the session key when the location changes (new navigation to this route)
+  useEffect(() => {
+    setSessionKey(Date.now());
+  }, [location.key]);
 
   // Support "all" as a special ID for reviewing all due cards
   const isAllDecks = id === 'all';
   const deck = isAllDecks ? null : getDeck(id || '');
 
   const handleComplete = useCallback(() => {
-    history.push('/home');
+    // Use replace to prevent going back to a stale session
+    history.replace('/home');
   }, [history]);
 
   const handleExit = useCallback(() => {
     if (isAllDecks) {
-      history.push('/home');
+      // Use replace to prevent going back to a stale session
+      history.replace('/home');
     } else {
-      history.push(`/deck/${id}`);
+      history.replace(`/deck/${id}`);
     }
   }, [history, id, isAllDecks]);
 
@@ -44,8 +56,8 @@ const Review: React.FC = () => {
   return (
     <IonPage>
       <ReviewSession
+        key={sessionKey}
         deckId={id}
-        reviewMode="classic"
         onComplete={handleComplete}
         onExit={handleExit}
       />

@@ -1,15 +1,69 @@
 import React, { useMemo } from 'react';
 import { IonContent, IonPage, IonSpinner } from '@ionic/react';
 import { useDeckContext } from '../contexts/DeckContext';
+import { WeeklyChart } from '../components/charts/WeeklyChart';
+import { DistributionChart } from '../components/charts/DistributionChart';
 import { formatDuration } from '../utils/dateHelpers';
 import './Statistics.css';
 
 const Statistics: React.FC = () => {
-  const { decks, cards, loading, getDueCards, getTodayStats } = useDeckContext();
+  const { decks, cards, reviewLogs, loading, getDueCards, getTodayStats } = useDeckContext();
 
   const stats = useMemo(() => getTodayStats(), [getTodayStats]);
   const dueCount = useMemo(() => getDueCards().length, [getDueCards]);
   const totalCards = cards.length;
+
+  // Calculate weekly data from review logs
+  const weeklyData = useMemo(() => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const today = new Date();
+    const data: { day: string; count: number }[] = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toDateString();
+
+      const count = reviewLogs.filter(
+        log => new Date(log.reviewDate).toDateString() === dateStr
+      ).length;
+
+      data.push({
+        day: days[date.getDay()],
+        count,
+      });
+    }
+
+    return data;
+  }, [reviewLogs]);
+
+  // Calculate card state distribution
+  const distributionData = useMemo(() => {
+    let newCount = 0;
+    let learningCount = 0;
+    let reviewCount = 0;
+
+    cards.forEach(card => {
+      switch (card.reviewData.state) {
+        case 'new':
+          newCount++;
+          break;
+        case 'learning':
+        case 'relearning':
+          learningCount++;
+          break;
+        case 'review':
+          reviewCount++;
+          break;
+      }
+    });
+
+    return [
+      { label: 'New', value: newCount, color: '#6366f1' },
+      { label: 'Learning', value: learningCount, color: '#f59e0b' },
+      { label: 'Review', value: reviewCount, color: '#10b981' },
+    ];
+  }, [cards]);
 
   if (loading) {
     return (
@@ -63,18 +117,19 @@ const Statistics: React.FC = () => {
             </div>
           </section>
 
-          {/* Overview */}
+          {/* Weekly Activity Chart */}
           <section className="stats-section">
-            <h2>Overview</h2>
-            <div className="stats-grid stats-grid-2">
-              <div className="stat-card">
-                <span className="stat-value">{decks.length}</span>
-                <span className="stat-label">Decks</span>
-              </div>
-              <div className="stat-card">
-                <span className="stat-value">{totalCards}</span>
-                <span className="stat-label">Cards</span>
-              </div>
+            <h2>This Week</h2>
+            <div className="chart-container">
+              <WeeklyChart data={weeklyData} />
+            </div>
+          </section>
+
+          {/* Card Distribution Chart */}
+          <section className="stats-section">
+            <h2>Card Status</h2>
+            <div className="chart-container">
+              <DistributionChart data={distributionData} />
             </div>
           </section>
 
