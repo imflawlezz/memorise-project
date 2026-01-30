@@ -1,0 +1,103 @@
+/* Reversed Mode - 3D Flip Animation */
+
+/* Card container with perspective */
+.reversed-card-container {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    max-height: 60vh;
+    aspect-ratio: 3 / 4;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+.reversed-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease;
+}
+
+.reversed-card-container.flipped .reversed-card-inner {
+    transform: rotateY(180deg);
+}
+
+.reversed-card-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.reversed-card-front {
+    z-index: 2;
+}
+
+.reversed-card-back {
+    transform: rotateY(180deg);
+    z-index: 1;
+}
+
+.reversed-card-face .card-side-label {
+    position: absolute;
+    top: var(--space-md);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-tertiary);
+}
+
+.reversed-card-face .card-text {
+    font-size: 18px;
+    line-height: 1.5;
+    text-align: center;
+    color: var(--ion-text-color);
+}
+
+.reversed-card-face .card-text p {
+    margin: 0;
+}
+
+.reversed-card-face .card-hint {
+    position: absolute;
+    bottom: var(--space-md);
+    font-size: 13px;
+    color: var(--text-tertiary);
+}
+
+/* Touch feedback */
+.reversed-card-container:active .reversed-card-face {
+    background: var(--surface-hover);
+}
+
+/* Mobile adjustments */
+@media (max-width: 400px) {
+    .reversed-card-container {
+        max-width: 320px;
+        max-height: 50vh;
+    }
+
+    .reversed-card-face .card-text {
+        font-size: 16px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+    .reversed-card-container {
+        max-width: 450px;
+        max-height: 500px;
+    }
+}

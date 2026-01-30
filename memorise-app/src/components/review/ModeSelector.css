@@ -1,0 +1,103 @@
+/* Mode Selector - Unified Design */
+
+.mode-selector {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: var(--space-lg);
+}
+
+.mode-selector-header {
+    text-align: center;
+    padding: var(--space-xl) 0;
+}
+
+.mode-selector-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ion-text-color);
+    margin: 0 0 var(--space-xs);
+}
+
+.mode-selector-header p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Mode Options */
+.mode-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    flex: 1;
+}
+
+.mode-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    cursor: pointer;
+    text-align: left;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.mode-option:hover {
+    background: var(--surface-hover);
+}
+
+.mode-option:active {
+    transform: scale(0.98);
+}
+
+.mode-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+}
+
+.mode-icon ion-icon {
+    font-size: 24px;
+    color: var(--ion-color-primary);
+}
+
+.mode-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mode-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ion-text-color);
+}
+
+.mode-description {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* Cancel button */
+.mode-cancel {
+    margin-top: var(--space-lg);
+    padding: var(--space-md);
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.mode-cancel:hover {
+    color: var(--ion-text-color);
+}

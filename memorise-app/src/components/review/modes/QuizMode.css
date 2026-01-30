@@ -1,0 +1,126 @@
+/* Quiz Mode - Uses same structure as Classic */
+
+/* The card styling matches FlashCard */
+.quiz-card {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    max-height: 60vh;
+    aspect-ratio: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    position: relative;
+}
+
+.quiz-card .card-side-label {
+    position: absolute;
+    top: var(--space-md);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-tertiary);
+}
+
+.quiz-card .card-text {
+    font-size: 18px;
+    line-height: 1.5;
+    text-align: center;
+    color: var(--ion-text-color);
+}
+
+.quiz-card .card-text p {
+    margin: 0;
+}
+
+/* Options in the controls area */
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    width: 100%;
+}
+
+.quiz-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--transition-fast);
+}
+
+.quiz-option:hover:not(:disabled) {
+    background: var(--surface-hover);
+}
+
+.quiz-option:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.quiz-option:disabled {
+    cursor: default;
+}
+
+.quiz-option.correct {
+    border-color: var(--ion-color-success);
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.quiz-option.incorrect {
+    border-color: var(--ion-color-danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.option-letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ion-color-primary);
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.quiz-option.correct .option-letter {
+    color: var(--ion-color-success);
+    background: rgba(16, 185, 129, 0.2);
+}
+
+.quiz-option.incorrect .option-letter {
+    color: var(--ion-color-danger);
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.option-text {
+    font-size: 14px;
+    color: var(--ion-text-color);
+    flex: 1;
+    line-height: 1.3;
+}
+
+/* Mobile adjustments */
+@media (max-width: 400px) {
+    .quiz-card {
+        max-width: 320px;
+        max-height: 50vh;
+    }
+
+    .quiz-card .card-text {
+        font-size: 16px;
+    }
+}

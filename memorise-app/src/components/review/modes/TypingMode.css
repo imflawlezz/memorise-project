@@ -1,0 +1,134 @@
+/* Typing Mode - Uses same structure as Classic */
+
+/* The card styling matches FlashCard */
+.typing-card {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    max-height: 60vh;
+    aspect-ratio: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    position: relative;
+}
+
+.typing-card .card-side-label {
+    position: absolute;
+    top: var(--space-md);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-tertiary);
+}
+
+.typing-card .card-text {
+    font-size: 18px;
+    line-height: 1.5;
+    text-align: center;
+    color: var(--ion-text-color);
+}
+
+.typing-card .card-text p {
+    margin: 0;
+}
+
+.typing-correct-reveal {
+    position: absolute;
+    bottom: var(--space-lg);
+    text-align: center;
+}
+
+.typing-correct-reveal .correct-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ion-color-danger);
+    margin-bottom: 4px;
+}
+
+.typing-correct-reveal .correct-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ion-text-color);
+}
+
+/* Form in controls area */
+.typing-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    width: 100%;
+}
+
+.typing-input-wrapper {
+    position: relative;
+}
+
+.typing-input-wrapper input {
+    width: 100%;
+    padding: var(--space-md);
+    padding-right: 48px;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--ion-text-color);
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.typing-input-wrapper input:focus {
+    border-color: var(--ion-color-primary);
+}
+
+.typing-input-wrapper input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.typing-input-wrapper.correct input {
+    border-color: var(--ion-color-success);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.typing-input-wrapper.incorrect input {
+    border-color: var(--ion-color-danger);
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.result-icon {
+    position: absolute;
+    right: var(--space-md);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+}
+
+.typing-input-wrapper.correct .result-icon {
+    color: var(--ion-color-success);
+}
+
+.typing-input-wrapper.incorrect .result-icon {
+    color: var(--ion-color-danger);
+}
+
+/* Mobile adjustments */
+@media (max-width: 400px) {
+    .typing-card {
+        max-width: 320px;
+        max-height: 50vh;
+    }
+
+    .typing-card .card-text {
+        font-size: 16px;
+    }
+}

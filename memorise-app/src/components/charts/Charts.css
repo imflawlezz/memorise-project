@@ -1,0 +1,138 @@
+/* Charts Styling */
+
+/* Weekly Bar Chart */
+.weekly-chart {
+    padding: var(--space-md) 0;
+}
+
+.chart-bars {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 120px;
+    gap: var(--space-xs);
+}
+
+.chart-bar-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.chart-bar-container {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.chart-bar {
+    width: 100%;
+    max-width: 32px;
+    background: var(--border-color);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    transition: height 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 4px;
+}
+
+.chart-bar.active {
+    background: var(--ion-color-primary);
+}
+
+.chart-bar-value {
+    font-size: 10px;
+    font-weight: 600;
+    color: white;
+    padding-top: 4px;
+}
+
+.chart-bar-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+/* Distribution Donut Chart */
+.distribution-chart {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-md) 0;
+}
+
+.donut-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+}
+
+.donut {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.donut-segment {
+    transition: stroke-dasharray 0.3s ease;
+}
+
+.donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.donut-total {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ion-text-color);
+    line-height: 1;
+}
+
+.donut-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* Legend */
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    flex: 1;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.legend-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    flex: 1;
+}
+
+.legend-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ion-text-color);
+}

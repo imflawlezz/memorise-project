@@ -181,3 +181,11 @@
         padding: var(--space-lg);
     }
 }
+
+/* Chart container */
+.chart-container {
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
