@@ -1,9 +1,10 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { Card } from '../models/Card';
 import { ReviewMode } from '../models/ReviewLog';
 import { ReviewResult } from '../models/StudySession';
 import { useDeckContext } from '../contexts/DeckContext';
 import { DifficultyRating, getQualityFromDifficulty } from '../utils/sm2Algorithm';
+import { StorageService, getDefaultSettings } from '../services/storageService';
 
 interface UseReviewSessionReturn {
   currentCard: Card | undefined;
@@ -27,6 +28,10 @@ interface UseReviewSessionReturn {
 /**
  * Hook for managing a review session
  * Supports single deck review or "all" for all due cards across all decks
+ * 
+ * This hook builds the queue ONCE when it mounts and uses that queue for the entire session.
+ * The queue is NOT rebuilt during the session - this is intentional to prevent
+ * issues with cards being added/removed mid-session.
  */
 export const useReviewSession = (
   deckId: string,
@@ -34,7 +39,43 @@ export const useReviewSession = (
 ): UseReviewSessionReturn => {
   const { reviewCard, buildReviewQueue, getDeck, getDueCards } = useDeckContext();
 
-  const [queue, setQueue] = useState<Card[]>([]);
+  // Load settings synchronously from localStorage for initial queue build
+  const getSettings = () => {
+    try {
+      const stored = localStorage.getItem('memorise_settings');
+      if (stored) {
+        return { ...getDefaultSettings(), ...JSON.parse(stored) };
+      }
+    } catch {
+      // Ignore parse errors
+    }
+    return getDefaultSettings();
+  };
+
+  // Build queue ONCE on mount using useMemo with empty deps
+  // This ensures the queue is stable for the entire session
+  const initialQueue = useMemo(() => {
+    const settings = getSettings();
+    const maxNew = settings.dailyNewCardLimit;
+    const maxReview = settings.dailyReviewLimit;
+
+    if (deckId === 'all') {
+      // For "all decks" mode, getDueCards already applies limits
+      return getDueCards ? getDueCards() : [];
+    } else {
+      const deck = getDeck(deckId);
+      if (deck) {
+        // Use global settings, but respect deck-specific limits if lower
+        const deckMaxNew = Math.min(maxNew, deck.settings.newCardsPerDay);
+        const deckMaxReview = Math.min(maxReview, deck.settings.reviewsPerDay);
+        return buildReviewQueue(deckId, deckMaxNew, deckMaxReview);
+      }
+    }
+    return [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps - build once on mount only
+
+  const [queue] = useState<Card[]>(initialQueue);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -44,11 +85,14 @@ export const useReviewSession = (
 
   const sessionStartTime = useRef(Date.now());
   const cardStartTime = useRef(Date.now());
-  const lastDeckId = useRef<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isProcessing = useRef(false); // Lock to prevent double submissions
 
   // Timer effect
   useEffect(() => {
+    sessionStartTime.current = Date.now();
+    cardStartTime.current = Date.now();
+
     timerRef.current = setInterval(() => {
       setSessionTime(Math.floor((Date.now() - sessionStartTime.current) / 1000));
     }, 1000);
@@ -60,49 +104,20 @@ export const useReviewSession = (
     };
   }, []);
 
-  // Initialize queue when deckId changes
-  useEffect(() => {
-    if (lastDeckId.current === deckId) {
-      return;
-    }
-
-    let reviewQueue: Card[] = [];
-
-    if (deckId === 'all') {
-      // Get all due cards from all decks
-      reviewQueue = getDueCards ? getDueCards() : [];
-    } else {
-      // Get cards from specific deck
-      const deck = getDeck(deckId);
-      if (deck) {
-        reviewQueue = buildReviewQueue(
-          deckId,
-          deck.settings.newCardsPerDay,
-          deck.settings.reviewsPerDay
-        );
-      }
-    }
-
-    lastDeckId.current = deckId;
-    setQueue(reviewQueue);
-    setCurrentIndex(0);
-    setIsFlipped(false);
-    setIsTransitioning(false);
-    setSessionTime(0);
-    setReviewed([]);
-    setResults({ again: 0, hard: 0, good: 0, easy: 0 });
-    sessionStartTime.current = Date.now();
-    cardStartTime.current = Date.now();
-  }, [deckId, getDeck, buildReviewQueue, getDueCards]);
-
   const currentCard = queue[currentIndex];
 
   const flipCard = useCallback(() => {
-    setIsFlipped(true);
+    if (!isProcessing.current) {
+      setIsFlipped(true);
+    }
   }, []);
 
   const handleReview = useCallback(async (difficulty: DifficultyRating) => {
-    if (!currentCard || isTransitioning) return;
+    // Double-check protection: both state and ref
+    if (!currentCard || isTransitioning || isProcessing.current) return;
+
+    // Set lock immediately to prevent any concurrent calls
+    isProcessing.current = true;
 
     const timeSpent = Math.floor((Date.now() - cardStartTime.current) / 1000);
 
@@ -135,12 +150,14 @@ export const useReviewSession = (
           cardStartTime.current = Date.now();
           return prevIndex + 1;
         } else {
-          // Session complete
+          // Session complete - set to -1 to indicate completion
           return -1;
         }
       });
       setIsTransitioning(false);
-    }, 150);
+      // Release the lock after transition completes
+      isProcessing.current = false;
+    }, 300); // Increased to 300ms for better animation
   }, [currentCard, queue.length, reviewCard, reviewMode, isTransitioning]);
 
   const progress = queue.length > 0 ? ((currentIndex + 1) / queue.length) * 100 : 0;

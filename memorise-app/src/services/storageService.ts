@@ -215,7 +215,7 @@ export class StorageService {
       this.getSettings(),
     ]);
 
-    return JSON.stringify({
+    const exportObj = {
       version: 1,
       exportDate: new Date().toISOString(),
       decks,
@@ -223,25 +223,82 @@ export class StorageService {
       reviewLogs,
       studySessions,
       settings,
-    }, null, 2);
+    };
+
+    // Use custom serializer to handle Date objects
+    return serialize(exportObj);
   }
 
   static async importData(json: string): Promise<void> {
     try {
-      const data = JSON.parse(json);
+      // Use custom deserializer to reconstruct Date objects
+      const data = deserialize<{
+        version?: number;
+        decks?: Deck[];
+        cards?: Card[];
+        reviewLogs?: ReviewLog[];
+        studySessions?: StudySession[];
+        settings?: Partial<AppSettings>;
+      }>(json);
 
-      if (data.decks) {
-        await this.saveDecks(deserialize<Deck[]>(JSON.stringify(data.decks)));
+      // Validate version
+      if (data.version && data.version > 1) {
+        throw new Error('Unsupported export version');
       }
-      if (data.cards) {
-        await this.saveCards(deserialize<Card[]>(JSON.stringify(data.cards)));
+
+      // Import decks
+      if (data.decks && Array.isArray(data.decks)) {
+        const validDecks = data.decks.map(deck => ({
+          ...deck,
+          createdAt: deck.createdAt instanceof Date ? deck.createdAt : new Date(deck.createdAt),
+          updatedAt: deck.updatedAt instanceof Date ? deck.updatedAt : new Date(deck.updatedAt),
+        }));
+        await this.saveDecks(validDecks);
       }
-      if (data.reviewLogs) {
-        await this.saveReviewLogs(deserialize<ReviewLog[]>(JSON.stringify(data.reviewLogs)));
+
+      // Import cards
+      if (data.cards && Array.isArray(data.cards)) {
+        const validCards = data.cards.map(card => ({
+          ...card,
+          createdAt: card.createdAt instanceof Date ? card.createdAt : new Date(card.createdAt),
+          updatedAt: card.updatedAt instanceof Date ? card.updatedAt : new Date(card.updatedAt),
+          reviewData: {
+            ...card.reviewData,
+            nextReviewDate: card.reviewData.nextReviewDate instanceof Date
+              ? card.reviewData.nextReviewDate
+              : new Date(card.reviewData.nextReviewDate),
+            lastReviewDate: card.reviewData.lastReviewDate
+              ? (card.reviewData.lastReviewDate instanceof Date
+                ? card.reviewData.lastReviewDate
+                : new Date(card.reviewData.lastReviewDate))
+              : undefined,
+          },
+        }));
+        await this.saveCards(validCards);
       }
-      if (data.studySessions) {
-        await this.saveStudySessions(deserialize<StudySession[]>(JSON.stringify(data.studySessions)));
+
+      // Import review logs
+      if (data.reviewLogs && Array.isArray(data.reviewLogs)) {
+        const validLogs = data.reviewLogs.map(log => ({
+          ...log,
+          reviewDate: log.reviewDate instanceof Date ? log.reviewDate : new Date(log.reviewDate),
+        }));
+        await this.saveReviewLogs(validLogs);
       }
+
+      // Import study sessions
+      if (data.studySessions && Array.isArray(data.studySessions)) {
+        const validSessions = data.studySessions.map(session => ({
+          ...session,
+          startDate: session.startDate instanceof Date ? session.startDate : new Date(session.startDate),
+          endDate: session.endDate
+            ? (session.endDate instanceof Date ? session.endDate : new Date(session.endDate))
+            : undefined,
+        }));
+        await this.saveStudySessions(validSessions);
+      }
+
+      // Import settings
       if (data.settings) {
         await this.saveSettings({ ...getDefaultSettings(), ...data.settings });
       }
